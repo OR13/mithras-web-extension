@@ -2,6 +2,8 @@ import React from "react";
 import { Hello } from "@src/components/hello";
 import browser, { Tabs } from "webextension-polyfill";
 import { Scroller } from "@src/components/scroller";
+import { Injector } from "@src/components/Injector";
+
 import css from "./styles.module.css";
 
 // // // //
@@ -47,7 +49,39 @@ function executeScript(position: number): void {
         });
 }
 
-// // // //
+function injectContent(args: any) {
+    console.log("args", args);
+}
+
+function handleInject(): void {
+    // Query for the active tab in the current window
+    browser.tabs
+        .query({ active: true, currentWindow: true })
+        .then((tabs: Tabs.Tab[]) => {
+            // Pulls current tab from browser.tabs.query response
+            const currentTab: Tabs.Tab | number = tabs[0];
+
+            // Short circuits function execution is current tab isn't found
+            if (!currentTab) {
+                return;
+            }
+            const currentTabId: number = currentTab.id as number;
+
+            // Executes the script in the current tab
+            browser.scripting
+                .executeScript({
+                    target: {
+                        tabId: currentTabId,
+                    },
+                    func: injectContent,
+                    args: [{ foo: 'asdf' }],
+                })
+                .then(() => {
+                    console.log("Done Scrolling");
+                });
+        });
+}
+
 
 export function Popup() {
     // Sends the `popupMounted` event
@@ -61,6 +95,7 @@ export function Popup() {
             <div className="mx-4 my-4">
                 <Hello />
                 <hr />
+                <Injector onInject={()=>{handleInject()}}/>
                 <Scroller
                     onClickScrollTop={() => {
                         executeScript(scrollToTopPosition);

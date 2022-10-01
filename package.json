@@ -10,7 +10,8 @@
         "lint": "eslint --fix -c ./.eslintrc.js \"src/**/*.ts*\"",
         "prettify": "prettier --write \"src/**/*.ts*\"",
         "storybook": "start-storybook -p 6006",
-        "build-storybook": "build-storybook"
+        "build-storybook": "build-storybook",
+        "shove": "git add -A; git commit -m ':rocket:' ; git push origin main"
     },
     "repository": {
         "type": "git",
