@@ -16,6 +16,9 @@ export function Popup() {
     }, []);
 
     const [items, setItems]: any = React.useState([]);
+    const [cypherQuery, setCypherQuery]: any = React.useState(
+        "MATCH (n) DETACH DELETE n;",
+    );
 
     chrome.runtime.onMessage.addListener(function (
         request,
@@ -32,6 +35,7 @@ export function Popup() {
                 request.items.map(async (i: any) => {
                     const data = await LinkedData.add(i, sender.url || "");
                     console.log(data);
+                    setCypherQuery(data.cypher.query);
                 }),
             );
         }
@@ -98,10 +102,9 @@ export function Popup() {
                             getLinkedDataBy({ type: "Product" });
                         }}
                     >
-                        Scrape Linked Data
+                        RDF to Cypher
                     </Button>
-
-                    <Button
+                    {/* <Button
                         variant="contained"
                         onClick={async () => {
                             const data = await LinkedData.all();
@@ -109,18 +112,18 @@ export function Popup() {
                         }}
                     >
                         View Data
-                    </Button>
-                    <Button
+                    </Button> */}
+                    {/* <Button
                         variant="outlined"
                         onClick={async () => {
                             await LinkedData.clear();
                         }}
                     >
                         Delete Data
-                    </Button>
+                    </Button> */}
                 </Stack>
-
-                <pre>{JSON.stringify(items, null, 2)}</pre>
+                <pre>{cypherQuery}</pre>
+                {/* <pre>{JSON.stringify(items, null, 2)}</pre> */}
             </div>
         </div>
     );
