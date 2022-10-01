@@ -1,64 +1,23 @@
 import React from "react";
 import { Hello } from "@src/components/hello";
 import browser, { Tabs } from "webextension-polyfill";
-import { Scroller } from "@src/components/scroller";
 import { LinkedDataQuery } from "@src/components/LinkedDataQuery";
 
 import css from "./styles.module.css";
 
 
-// import {
-//     Quadstore,
-//     Engine,
-//     BrowserLevel,
-//     DataFactory,
-// } from './bundle';
+import {
+    Quadstore,
+    Engine,
+    BrowserLevel,
+    DataFactory,
+} from './bundle';
 
 
-// // // //
-
-// Scripts to execute in current tab
-const scrollToTopPosition = 0;
-const scrollToBottomPosition = 9999999;
-
-function scrollWindow(position: number) {
-    window.scroll(0, position);
-}
-
-/**
- * Executes a string of Javascript on the current tab
- * @param code The string of code to execute on the current tab
- */
-function executeScript(position: number): void {
-    // Query for the active tab in the current window
-    browser.tabs
-        .query({ active: true, currentWindow: true })
-        .then((tabs: Tabs.Tab[]) => {
-            // Pulls current tab from browser.tabs.query response
-            const currentTab: Tabs.Tab | number = tabs[0];
-
-            // Short circuits function execution is current tab isn't found
-            if (!currentTab) {
-                return;
-            }
-            const currentTabId: number = currentTab.id as number;
-
-            // Executes the script in the current tab
-            browser.scripting
-                .executeScript({
-                    target: {
-                        tabId: currentTabId,
-                    },
-                    func: scrollWindow,
-                    args: [position],
-                })
-                .then(() => {
-                    console.log("Done Scrolling");
-                });
-        });
-}
-
-
+const backend = new BrowserLevel('quadstore');
+const dataFactory = new DataFactory();
+const store = new Quadstore({ backend, dataFactory });
+const engine = new Engine(store);
 
 
 export function Popup() {
@@ -71,16 +30,19 @@ export function Popup() {
 
     chrome.runtime.onMessage.addListener(
         function(request, sender, sendResponse) {
-        console.log('sender : ', sender);
-        console.log('request: ', request)
+        // console.log('sender : ', sender);
+        // console.log('request: ', request)
             if (request.items){
-                console.log(request.items)
+                // console.log(request.items)
                 setItems(request.items)
+
+                
+
                 sendResponse({message: "thanks for submitting these items."});
+              
             } 
         }
       );
-    
     
     function getLinkedDataBy(args: any): void {
         // Query for the active tab in the current window
@@ -132,16 +94,28 @@ export function Popup() {
                 <Hello />
                 <hr />
                 <LinkedDataQuery query={()=> { getLinkedDataBy({type: "Product"}) }}/>
+
+               
+                <button onClick={async ()=>{
+                await store.open();
+                await store.put(dataFactory.quad(dataFactory.namedNode('ex://s'), dataFactory.namedNode('ex://p'), dataFactory.namedNode('ex://o')));
+
+                }}>Add Data</button>
+
+                <button onClick={async ()=>{
+                    await store.open();
+                    const stream = await engine.queryBindings(`SELECT * WHERE { ?s ?p ?o }`);
+                    stream.on('data', console.log);
+                   
+                }}>View Data</button>
+
+                <button onClick={async ()=>{ 
+                   await store.open();
+                   await store.clear();
+                }}>Delete Data</button>
+
                 <pre>{JSON.stringify(items, null, 2)}</pre>
 
-                {/* <Scroller
-                    onClickScrollTop={() => {
-                        executeScript(scrollToTopPosition);
-                    }}
-                    onClickScrollBottom={() => {
-                        executeScript(scrollToBottomPosition);
-                    }}
-                /> */}
             </div>
         </div>
     );
