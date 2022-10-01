@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mithras Web Extension Test Page</title>
+   
+  </head>
+  <body>
+	  <p>View source.</p>
+    <!-- https://schema.org/Product -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "bestRating": "100",
+          "ratingCount": "24",
+          "ratingValue": "87"
+        },
+        "image": "dell-30in-lcd.jpg",
+        "name": "Dell UltraSharp 30\" LCD Monitor",
+        "offers": {
+          "@type": "AggregateOffer",
+          "highPrice": "$1495",
+          "lowPrice": "$1250",
+          "offerCount": "8",
+          "offers": [
+            {
+              "@type": "Offer",
+              "url": "save-a-lot-monitors.com/dell-30.html"
+            },
+            {
+              "@type": "Offer",
+              "url": "jondoe-gadgets.com/dell-30.html"
+            }
+          ]
+        }
+      }
+    </script>
+  </body>
+</html>
