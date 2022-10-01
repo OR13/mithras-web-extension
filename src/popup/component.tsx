@@ -1,16 +1,13 @@
 import React from "react";
-import { Hello } from "@src/components/hello";
+
 import browser, { Tabs } from "webextension-polyfill";
-import { LinkedDataQuery } from "@src/components/LinkedDataQuery";
+
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 import css from "./styles.module.css";
 
-import { Quadstore, Engine, BrowserLevel, DataFactory } from "./bundle";
-
-const backend = new BrowserLevel("quadstore");
-const dataFactory = new DataFactory();
-const store = new Quadstore({ backend, dataFactory });
-const engine = new Engine(store);
+import LinkedData from "../services/LinkedData";
 
 export function Popup() {
     // Sends the `popupMounted` event
@@ -25,13 +22,18 @@ export function Popup() {
         sender,
         sendResponse,
     ) {
-        // console.log('sender : ', sender);
+        console.log("sender : ", sender);
         // console.log('request: ', request)
+
+        sendResponse({ message: "thanks for submitting these items." });
         if (request.items) {
             // console.log(request.items)
-            setItems(request.items);
-
-            sendResponse({ message: "thanks for submitting these items." });
+            Promise.all(
+                request.items.map(async (i: any) => {
+                    const data = await LinkedData.add(i, sender.url || "");
+                    console.log(data);
+                }),
+            );
         }
     });
 
@@ -86,54 +88,37 @@ export function Popup() {
                     });
             });
     }
-
-    // Renders the component tree
     return (
         <div className={css.popupContainer}>
             <div className="mx-4 my-4">
-                <Hello />
-                <hr />
-                <LinkedDataQuery
-                    query={() => {
-                        getLinkedDataBy({ type: "Product" });
-                    }}
-                />
+                <Stack spacing={2} direction="row">
+                    <Button
+                        variant="text"
+                        onClick={async () => {
+                            getLinkedDataBy({ type: "Product" });
+                        }}
+                    >
+                        Scrape Linked Data
+                    </Button>
 
-                <button
-                    onClick={async () => {
-                        await store.open();
-                        await store.put(
-                            dataFactory.quad(
-                                dataFactory.namedNode("ex://s"),
-                                dataFactory.namedNode("ex://p"),
-                                dataFactory.namedNode("ex://o"),
-                            ),
-                        );
-                    }}
-                >
-                    Add Data
-                </button>
-
-                <button
-                    onClick={async () => {
-                        await store.open();
-                        const stream = await engine.queryBindings(
-                            `SELECT * WHERE { ?s ?p ?o }`,
-                        );
-                        stream.on("data", console.log);
-                    }}
-                >
-                    View Data
-                </button>
-
-                <button
-                    onClick={async () => {
-                        await store.open();
-                        await store.clear();
-                    }}
-                >
-                    Delete Data
-                </button>
+                    <Button
+                        variant="contained"
+                        onClick={async () => {
+                            const data = await LinkedData.all();
+                            setItems(data);
+                        }}
+                    >
+                        View Data
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        onClick={async () => {
+                            await LinkedData.clear();
+                        }}
+                    >
+                        Delete Data
+                    </Button>
+                </Stack>
 
                 <pre>{JSON.stringify(items, null, 2)}</pre>
             </div>
