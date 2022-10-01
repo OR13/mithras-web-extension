@@ -1,5 +1,5 @@
 .popupContainer {
-    min-width: 300px;
-    min-height: 300px;
+    min-width: 600px;
+    min-height: 600px;
     display: flex;
 }
