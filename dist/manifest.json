@@ -1,8 +1,8 @@
 
 {
     "manifest_version": 3,
-    "name": "Chrome Extension Starter",
-    "description": "A Chrome Extension starter kit",
+    "name": "Mithras",
+    "description": "🌈 I wear the Armor of Mithras and the Light.",
     "version": "1.0.0",
     "action": {
         "default_icon": {
