@@ -6,6 +6,15 @@ import { Injector } from "@src/components/Injector";
 
 import css from "./styles.module.css";
 
+
+// import {
+//     Quadstore,
+//     Engine,
+//     BrowserLevel,
+//     DataFactory,
+// } from './bundle';
+
+
 // // // //
 
 // Scripts to execute in current tab
@@ -49,11 +58,20 @@ function executeScript(position: number): void {
         });
 }
 
-function injectContent(args: any) {
-    console.log("args", args);
-}
 
-function handleInject(): void {
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+    console.log('sender : ', sender);
+    console.log('request: ', request)
+        if (request.greeting === "hello"){
+            sendResponse({farewell: "goodbye"});
+
+        } 
+    }
+  );
+
+
+function handleInject(args: any): void {
     // Query for the active tab in the current window
     browser.tabs
         .query({ active: true, currentWindow: true })
@@ -66,22 +84,26 @@ function handleInject(): void {
                 return;
             }
             const currentTabId: number = currentTab.id as number;
-
-            // Executes the script in the current tab
+            // // Executes the script in the current tab
             browser.scripting
                 .executeScript({
                     target: {
                         tabId: currentTabId,
                     },
-                    func: injectContent,
-                    args: [{ foo: 'asdf' }],
-                })
-                .then(() => {
-                    console.log("Done Scrolling");
-                });
-        });
-}
+                    func: function (args: any) {
+                       chrome.runtime.sendMessage(args, function(response) {
+                        console.log('sending message from page', args)
+                        console.log('received response from popup', response)
+                      });
 
+                    },
+                    args: [args],
+                })
+                .then((data) => {
+                    console.log("Done Injection", data);
+                });
+        });  
+}
 
 export function Popup() {
     // Sends the `popupMounted` event
@@ -95,7 +117,7 @@ export function Popup() {
             <div className="mx-4 my-4">
                 <Hello />
                 <hr />
-                <Injector onInject={()=>{handleInject()}}/>
+                <Injector onInject={()=> { handleInject({greeting: "hello"}) }}/>
                 <Scroller
                     onClickScrollTop={() => {
                         executeScript(scrollToTopPosition);
