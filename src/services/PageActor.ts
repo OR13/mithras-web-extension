@@ -19,11 +19,13 @@ function pageFunction({ type }: HarvestDataConfig) {
         .querySelectorAll('script[type="application/ld+json"]')
         .forEach((s) => {
             const i = JSON.parse(s.innerHTML);
-            if (type) {
-                if (i["@type"] === type) {
-                    items.push(i);
-                }
-            }
+            // disable limit on time.
+            // if (type) {
+            //     if (i["@type"] === type) {
+            //         items.push(i);
+            //     }
+            // }
+            items.push(i);
         });
     chrome.runtime.sendMessage({ items }, function (response) {
         // no need to handle a response here.
