@@ -14,7 +14,8 @@ const pageTemplate = (content) => {
     
   </head>
   <body>
-    <p>View source.</p>
+    <p><a href="https://github.com/OR13/mithras-web-extension/tree/main">https://github.com/OR13/mithras-web-extension</a></p>
+    <p>View page source.</p>
     ${content}
   </body>
 </html>`;
