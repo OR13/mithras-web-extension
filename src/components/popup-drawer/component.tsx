@@ -9,16 +9,20 @@ import ListItemText from "@mui/material/ListItemText";
 
 import DatasetLinkedIcon from "@mui/icons-material/DatasetLinked";
 
-export function PopUpDrawer() {
+type PageItem = Record<string, unknown> & { title: string };
+
+export function PopUpDrawer({ pageItems }: { pageItems: PageItem[] }) {
     return (
         <List>
-            {["All mail", "Trash", "Spam"].map((text, index) => (
-                <ListItem key={text} disablePadding>
+            {pageItems.map(({ title }: PageItem, index: number) => (
+                <ListItem key={index} disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
                             <DatasetLinkedIcon />
                         </ListItemIcon>
-                        <ListItemText primary={`Item ${index}`} />
+                        <ListItemText
+                            primary={title.substring(0, 16) + "..."}
+                        />
                     </ListItemButton>
                 </ListItem>
             ))}

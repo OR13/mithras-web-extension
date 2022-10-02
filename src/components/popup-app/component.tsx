@@ -7,7 +7,7 @@ import { PopUpDrawer } from "../popup-drawer";
 
 const drawerWidth = 196;
 
-export function PopupAppBar({ children }: any) {
+export function PopupAppBar({ pageItems, children }: any) {
     return (
         <Box sx={{ display: "flex" }}>
             <CssBaseline />
@@ -30,7 +30,7 @@ export function PopupAppBar({ children }: any) {
                 variant="permanent"
                 anchor="right"
             >
-                <PopUpDrawer />
+                <PopUpDrawer pageItems={pageItems} />
             </Drawer>
         </Box>
     );

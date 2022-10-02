@@ -1,5 +1,7 @@
 import browser, { Tabs } from "webextension-polyfill";
 
+import LinkedData from "./LinkedData";
+
 interface HarvestDataConfig {
     type: string;
 }
@@ -74,8 +76,9 @@ const onPopup = (setPageItems: any) => {
         console.log("request: ", request);
         if (request.items) {
             console.log(request.items);
-            setTimeout(() => {
-                setPageItems(request.items);
+            setTimeout(async () => {
+                const items = await LinkedData.processItems(request.items);
+                setPageItems(items);
             }, 1 * 1000);
 
             sendResponse({ message: "extension has received items." });

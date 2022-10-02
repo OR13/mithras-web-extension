@@ -8,6 +8,8 @@ import css from "./styles.module.css";
 
 import PageActor from "../services/PageActor";
 
+import { PopupTabs } from "@src/components/popup-tabs";
+
 export function Popup() {
     const [pageItems, setPageItems]: any = React.useState(null);
     React.useEffect(() => {
@@ -17,9 +19,7 @@ export function Popup() {
     return (
         <div className={css.popupContainer}>
             {pageItems ? (
-                <PopupAppBar>
-                    <pre>{JSON.stringify(pageItems, null, 2)}</pre>
-                </PopupAppBar>
+                <PopupTabs pageItems={pageItems} />
             ) : (
                 <TransmuteLoading fullPage={true} />
             )}
