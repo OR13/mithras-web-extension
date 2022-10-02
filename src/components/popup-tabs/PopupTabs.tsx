@@ -4,6 +4,8 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 
+import { PageItemTab } from "../page-item-tab";
+
 interface TabPanelProps {
     children?: React.ReactNode;
     dir?: string;
@@ -15,7 +17,7 @@ function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
 
     return (
-        <div
+        <span
             role="tabpanel"
             hidden={value !== index}
             id={`full-width-tabpanel-${index}`}
@@ -25,12 +27,14 @@ function TabPanel(props: TabPanelProps) {
             {value === index && (
                 <Box sx={{ p: 0, display: "flex" }}>{children}</Box>
             )}
-        </div>
+        </span>
     );
 }
 
-type PageItem = Record<string, unknown> & { title: string };
-
+type PageItem = Record<string, unknown> & {
+    title: string;
+    cypher: { query: string };
+};
 export function PopupTabs({ pageItems }: { pageItems: PageItem[] }) {
     const [value, setValue] = React.useState(0);
 
@@ -43,7 +47,6 @@ export function PopupTabs({ pageItems }: { pageItems: PageItem[] }) {
             sx={{
                 maxWidth: "780px",
                 width: "100%",
-                bgcolor: "background.paper",
             }}
         >
             <Tabs
@@ -54,13 +57,22 @@ export function PopupTabs({ pageItems }: { pageItems: PageItem[] }) {
                 aria-label="tabbed page items"
             >
                 {pageItems.map((pageItem, i) => {
-                    return <Tab label={pageItem.title} key={i} />;
+                    return (
+                        <Tab
+                            label={pageItem.title}
+                            key={i}
+                            sx={{
+                                textTransform: "none",
+                                margin: 0,
+                            }}
+                        />
+                    );
                 })}
             </Tabs>
             {pageItems.map((pageItem, i) => {
                 return (
                     <TabPanel value={value} index={i} key={i}>
-                        <pre>{pageItem.nquads}</pre>
+                        <PageItemTab pageItem={pageItem} />
                     </TabPanel>
                 );
             })}

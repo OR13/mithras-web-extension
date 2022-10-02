@@ -180,14 +180,13 @@ const processItem = async (doc: any) => {
 
     const title = getTitle(doc).replace(/[\\'\\"]+/g, "");
 
-    return { title, json: jsonGraph, nquads, cypher };
+    return { title, document: doc, json: jsonGraph, nquads, cypher };
 };
 
 const processItems = async (items: any) => {
     const processedItems = await Promise.all(
         items.map(async (i: any, index: number) => {
             const item = await processItem(i);
-            item.title = item.title + index;
             return item;
         }),
     );

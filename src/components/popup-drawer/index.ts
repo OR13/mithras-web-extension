@@ -1,1 +1,0 @@
-export { PopUpDrawer } from "./component";

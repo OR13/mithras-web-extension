@@ -72,14 +72,14 @@ const onPopup = (setPageItems: any) => {
         sender,
         sendResponse,
     ) {
-        console.log("sender : ", sender);
-        console.log("request: ", request);
+        // console.log("sender : ", sender);
+        // console.log("request: ", request);
         if (request.items) {
-            console.log(request.items);
+            // console.log(request.items);
             setTimeout(async () => {
                 const items = await LinkedData.processItems(request.items);
                 setPageItems(items);
-            }, 1 * 1000);
+            }, 0);
 
             sendResponse({ message: "extension has received items." });
         }
@@ -87,6 +87,36 @@ const onPopup = (setPageItems: any) => {
     harvestData({ type: "Product" });
 };
 
-const PageActor = { onPopup, harvestData };
+const openNewTab = (url: string) => {
+    browser.tabs
+        .query({ active: true, currentWindow: true })
+        .then((tabs: Tabs.Tab[]) => {
+            const currentTab: Tabs.Tab | number = tabs[0];
+            if (!currentTab) {
+                return;
+            }
+            const currentTabId: number = currentTab.id as number;
+            browser.scripting
+                .executeScript({
+                    target: {
+                        tabId: currentTabId,
+                    },
+                    func: function pageFunction(url: any) {
+                        console.log("pageFunction called.", url);
+                        if (url.startsWith("https://lucid.did.cards/")) {
+                            window.open(url);
+                        } else {
+                            throw new Error("Unsafe url..." + url);
+                        }
+                    },
+                    args: [url],
+                })
+                .then((data) => {
+                    console.log("Page script execution complete", data);
+                });
+        });
+};
+
+const PageActor = { onPopup, harvestData, openNewTab };
 
 export default PageActor;

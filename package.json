@@ -79,14 +79,18 @@
         "@emotion/styled": "^11.10.4",
         "@mui/icons-material": "^5.10.6",
         "@mui/material": "^5.10.7",
+        "@or13/did-jwk": "^0.0.3",
         "browser-level": "^1.0.1",
+        "buffer": "^6.0.3",
         "caniuse-lite": "^1.0.30001414",
         "jsonld": "^8.1.0",
         "quadstore": "^11.0.6",
         "quadstore-comunica": "^3.0.7",
         "rdf-data-factory": "^1.1.1",
         "react": "^17.0.2",
+        "react-copy-to-clipboard": "^5.1.0",
         "react-dom": "^17.0.2",
+        "react-toastify": "^9.0.8",
         "uuid": "^9.0.0",
         "webextension-polyfill": "^0.9.0"
     }
