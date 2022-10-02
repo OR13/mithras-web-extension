@@ -1,4 +1,4 @@
-# Mithras Web Extensio
+# Mithras Web Extension
 
 <img src="./transmute-banner.png" />
 
