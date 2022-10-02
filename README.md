@@ -8,9 +8,15 @@
 
 This repo contains web extension experiments related to JSON-LD, Verifiable Credentials and Decentralized Identifiers.
 
+<img src="./example3.png" />
+
 The popup exposes options related to the linked data fragments gatherd from the current active tab.
 
 <img src="./example.png" />
+
+View a fragments as a 3d graph after issuing it as a verifiable credential:
+
+<img src="./example2.png" />
 
 Example cypher query:
 
@@ -96,10 +102,6 @@ CREATE (n1)-[e26: FROM_NAMED_GRAPH_EDGE ]->(n15)
 CREATE (n24)-[e27: FROM_NAMED_GRAPH_EDGE ]->(n16)
 RETURN n0,n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11,n12,n13,n14,n15,n16,n17,n18,n19,n20,n21,n22,n23,n24
 ```
-
-View a fragments as a 3d graph after issuing it as a verifiable credential:
-
-<img src="./example2.png" />
 
 ### Developers
 
